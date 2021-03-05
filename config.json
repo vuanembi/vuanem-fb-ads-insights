@@ -18,12 +18,15 @@
         "ad_name",
         "reach",
         "impressions",
+        "cpc",
         "cpm",
         "frequency",
         "spend",
         "actions",
         "action_values",
         "conversions",
-        "conversion_values"
+        "conversion_values",
+        "cost_per_action_type",
+        "purchase_roas"
     ]
 }

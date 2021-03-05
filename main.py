@@ -5,20 +5,23 @@ import asyncio
 from datetime import datetime, timedelta
 
 import aiohttp
-from aiohttp.connector import TCPConnector
+from tqdm import tqdm
 from gcloud.aio.storage import Storage
 
+# To run asyncio on Windows
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 class FacebookAdsInsightsJob:
-    def __init__(self):
+    def __init__(self, **kwargs):
+        """Init. Getting env & configs from envs"""
+
         self.access_token = os.getenv("ACCESS_TOKEN")
         self.ads_account = os.getenv("ADS_ACCOUNT")
         self.api_ver = os.getenv("API_VER")
         self.bucket = os.getenv("BUCKET")
-        self.path = os.getenv("PATH")
+        self.path = os.getenv("PATH_TO_FILE")
 
         with open("config.json", "r") as f:
             config = json.load(f)
@@ -27,21 +30,55 @@ class FacebookAdsInsightsJob:
         self.windows = config.get("action_attribution_windows")
         self.dict_windows = self.windows_map()
 
+        if "end_date" in kwargs:
+            self.manual = True
+            self.end_date = datetime.strptime(kwargs["end_date"], "%Y-%m-%d")
+        else:
+            self.manual = False
+            self.end_date = datetime.now()
+
+        if "start_date" in kwargs:
+            self.start_date = datetime.strptime(kwargs["start_date"], "%Y-%m-%d")
+        else:
+            self.start_date = datetime.now() - timedelta(days=30)
+
+        self.num_processed = 0
+
     def windows_map(self):
+        """Change fields name to adhere to column name
+
+        Returns:
+            dict: Mapping
+        """
+
         dict_windows = {}
         for field in self.windows:
             dict_windows[field] = "_" + field
         return dict_windows
 
     def generate_time_ranges(self):
-        today = datetime.now()
-        start_date = today - timedelta(days=30)
+        """Generate date ranges between two dates
+
+        Returns:
+            list: List of dates
+        """
+
         date_ranges = [
-            start_date + timedelta(n) for n in range(int((today - start_date).days) + 1)
+            self.start_date + timedelta(n)
+            for n in range(int((self.end_date - self.start_date).days) + 1)
         ]
         return list(map(lambda x: x.strftime("%Y-%m-%d"), date_ranges))
 
     def transform_result(self, result):
+        """Transform fields name to adhere to columns' naming requirements
+
+        Args:
+            result (dict): Individual result
+
+        Returns:
+            dict: Processed individual result
+        """
+
         for nest in ["actions", "action_values"]:
             actions = result.get(nest)
             if actions:
@@ -52,6 +89,14 @@ class FacebookAdsInsightsJob:
         return result
 
     async def fetch_one(self, sessions, storage_client, dt):
+        """Fetch & upload one day of data
+
+        Args:
+            sessions (aiohttp.ClientSession): Client to requests API
+            storage_client (gcloud.aio.storage.Storage): Storage Client to upload
+            dt (str): Date in %Y-%m-%d
+        """
+
         time_range = {"since": dt, "until": dt}
         params = {
             "access_token": self.access_token,
@@ -68,33 +113,50 @@ class FacebookAdsInsightsJob:
             ),
             params=params,
         ) as r:
+            assert r.status == 200
             response = await r.json()
-        results = response.get("data", [])
-        results = list(map(self.transform_result, results))
-        results = "\n".join([json.dumps(result) for result in results])
-        print(results)
-        _ = await storage_client.upload(
-            self.bucket,
-            self.path + dt + ".json",
-            results,
-            timeout=60,
-        )
+        results = response.get("data")
+
+        if len(results) > 0:
+            results = list(map(self.transform_result, results))
+            results = "\n".join([json.dumps(result) for result in results])
+
+            status = await storage_client.upload(
+                self.bucket,
+                self.path + dt + ".json",
+                results,
+                timeout=60,
+            )
+            if status.get("md5Hash") is not None:
+                self.num_processed += 1
 
     async def fetch_all(self):
+        """Organize fetching all data in specified date ranges"""
+
         date_ranges = self.generate_time_ranges()
         async with aiohttp.ClientSession() as sessions, Storage(
             session=aiohttp.ClientSession()
         ) as storage_client:
             tasks = [
-                asyncio.create_task(
-                    self.fetch_one(sessions, storage_client, dt)
-                ) for dt in date_ranges
+                asyncio.create_task(self.fetch_one(sessions, storage_client, dt))
+                for dt in date_ranges
             ]
-            _ = await asyncio.gather(*tasks)
+            _ = [await f for f in tqdm(asyncio.as_completed(tasks), total=len(tasks))]
 
     def run(self):
+        """Run
+
+        Returns:
+            dict: JSON response for server
+        """
         asyncio.run(self.fetch_all())
+        return {
+            "start_date": self.start_date.strftime("%Y-%m-%d"),
+            "end_date": self.end_date.strftime("%Y-%m-%d"),
+            "num_processed": self.num_processed,
+        }
+
 
 def main(request):
     job = FacebookAdsInsightsJob()
-    _ = job.run()
+    return job.run()
