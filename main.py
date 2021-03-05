@@ -15,19 +15,19 @@ if sys.platform == "win32":
 
 
 class FacebookAdsInsightsJob:
-    def __init__(self, ads_account, **kwargs):
+    def __init__(self, ads_account, path, **kwargs):
         """Init. Getting env & configs from envs"""
 
+        self.ads_account = ads_account
+        self.path = 'facebook/' + path + '/'
+        
         self.access_token = os.getenv("ACCESS_TOKEN")
         self.api_ver = os.getenv("API_VER")
         self.bucket = os.getenv("BUCKET")
-        self.path = os.getenv("PATH_TO_FILE")
 
-        self.ads_account = ads_account
 
         with open("config.json", "r") as f:
             config = json.load(f)
-
         self.fields = config.get("fields")
         self.windows = config.get("action_attribution_windows")
         self.dict_windows = self.windows_map()
@@ -161,8 +161,8 @@ class FacebookAdsInsightsJob:
 
 
 def main(request):
-    VuaNemTk01 = FacebookAdsInsightsJob("act_2419414334994459")
-    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310")
+    VuaNemTk01 = FacebookAdsInsightsJob("act_2419414334994459", 'AdsInsights_VuaNemTk01')
+    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", 'AdsInsights_VuaNemUSD')
     results = {
         "pipelines": "Facebook Ads Insights",
         "results": [VuaNemTk01.run(), VuaNemUSD.run()],
