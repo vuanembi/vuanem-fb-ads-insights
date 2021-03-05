@@ -4,6 +4,7 @@ import json
 import asyncio
 from datetime import datetime, timedelta
 
+import requests
 import aiohttp
 from tqdm import tqdm
 from gcloud.aio.storage import Storage
@@ -14,14 +15,15 @@ if sys.platform == "win32":
 
 
 class FacebookAdsInsightsJob:
-    def __init__(self, **kwargs):
+    def __init__(self, ads_account, **kwargs):
         """Init. Getting env & configs from envs"""
 
         self.access_token = os.getenv("ACCESS_TOKEN")
-        self.ads_account = os.getenv("ADS_ACCOUNT")
         self.api_ver = os.getenv("API_VER")
         self.bucket = os.getenv("BUCKET")
         self.path = os.getenv("PATH_TO_FILE")
+
+        self.ads_account = ads_account
 
         with open("config.json", "r") as f:
             config = json.load(f)
@@ -139,7 +141,7 @@ class FacebookAdsInsightsJob:
         ) as storage_client:
             tasks = [
                 asyncio.create_task(self.fetch_one(sessions, storage_client, dt))
-                for dt in date_ranges
+                for dt in date_ranges[-2:-1]
             ]
             _ = [await f for f in tqdm(asyncio.as_completed(tasks), total=len(tasks))]
 
@@ -151,6 +153,7 @@ class FacebookAdsInsightsJob:
         """
         asyncio.run(self.fetch_all())
         return {
+            "ads_account": self.ads_account,
             "start_date": self.start_date.strftime("%Y-%m-%d"),
             "end_date": self.end_date.strftime("%Y-%m-%d"),
             "num_processed": self.num_processed,
@@ -158,5 +161,22 @@ class FacebookAdsInsightsJob:
 
 
 def main(request):
-    job = FacebookAdsInsightsJob()
-    return job.run()
+    VuaNemTk01 = FacebookAdsInsightsJob("act_2419414334994459")
+    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310")
+    results = {
+        "pipelines": "Facebook Ads Insights",
+        "results": [VuaNemTk01.run(), VuaNemUSD.run()],
+    }
+    print(results)
+
+    _ = requests.post(
+        "https://api.telegram.org/bot{token}/sendMessage".format(
+            token=os.getenv("TELEGRAM_TOKEN")
+        ),
+        json={
+            "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
+            "text": json.dumps(results, indent=4),
+        },
+    )
+
+    return results
