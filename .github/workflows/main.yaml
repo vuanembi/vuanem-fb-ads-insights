@@ -18,8 +18,7 @@ jobs:
             TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},\
             TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }},\
             API_VER=${{ secrets.API_VER }},\
-            BUCKET=${{ secrets.BUCKET }},\
-            PATH_TO_FILE=${{ secrets.PATH_TO_FILE }}"
+            BUCKET=${{ secrets.BUCKET }}"
           entry_point: main
           runtime: python38
           service_account_email: ${{ secrets.GCP_SA }}
