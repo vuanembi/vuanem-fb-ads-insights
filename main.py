@@ -141,7 +141,7 @@ class FacebookAdsInsightsJob:
         ) as storage_client:
             tasks = [
                 asyncio.create_task(self.fetch_one(sessions, storage_client, dt))
-                for dt in date_ranges[-2:-1]
+                for dt in date_ranges
             ]
             _ = [await f for f in tqdm(asyncio.as_completed(tasks), total=len(tasks))]
 
