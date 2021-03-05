@@ -18,8 +18,7 @@ jobs:
             ADS_ACCOUNT=${{ secrets.ADS_ACCOUNT }},\
             API_VER=${{ secrets.API_VER }},\
             BUCKET=${{ secrets.BUCKET }},\
-            PATH=$ {{ secrets.PATH }},\
-            GCP_SA=${{ secrets.GCP_SA }}"
+            PATH=${{ secrets.PATH }}"
           entry_point: main
           runtime: python38
           service_account_email: ${{ secrets.GCP_SA }}

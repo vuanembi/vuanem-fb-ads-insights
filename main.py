@@ -95,5 +95,6 @@ class FacebookAdsInsightsJob:
     def run(self):
         asyncio.run(self.fetch_all())
 
-
-a = FacebookAdsInsightsJob().run()
+def main(request):
+    job = FacebookAdsInsightsJob()
+    _ = job.run()
