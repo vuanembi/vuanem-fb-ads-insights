@@ -7,6 +7,14 @@
         "28d_click",
         "28d_view"
     ],
+    "fields_with_windows": [
+        "actions",
+        "action_values",
+        "conversions",
+        "conversion_values",
+        "cost_per_action_type",
+        "purchase_roas"
+    ],
     "fields": [
         "date_start",
         "date_stop",

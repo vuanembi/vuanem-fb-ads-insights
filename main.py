@@ -30,6 +30,7 @@ class FacebookAdsInsightsJob:
             config = json.load(f)
         self.fields = config.get("fields")
         self.windows = config.get("action_attribution_windows")
+        self.fields_with_windows = config.get('fields_with_windows')
         self.dict_windows = self.windows_map()
 
         if "end_date" in kwargs:
@@ -81,7 +82,7 @@ class FacebookAdsInsightsJob:
             dict: Processed individual result
         """
 
-        for nest in ["actions", "action_values"]:
+        for nest in self.fields_with_windows:
             actions = result.get(nest)
             if actions:
                 for i in actions:

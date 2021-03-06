@@ -1,11 +1,11 @@
 [
     {
         "name": "date_start",
-        "type": "STRING"
+        "type": "DATE"
     },
     {
         "name": "date_stop",
-        "type": "STRING"
+        "type": "DATE"
     },
     {
         "name": "campaign_id",
@@ -29,7 +29,7 @@
     },
     {
         "name": "ad_name",
-        "type": "TIMESTAMP"
+        "type": "STRING"
     },
     {
         "name": "reach",
@@ -96,6 +96,84 @@
     },
     {
         "name": "action_values",
+        "type": "record",
+        "mode": "repeated",
+        "fields": [
+            {
+                "name": "action_type",
+                "type": "STRING"
+            },
+            {
+                "name": "value",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_1d_click",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_7d_click",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_28d_click",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_1d_view",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_7d_view",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_28d_view",
+                "type": "FLOAT"
+            }
+        ]
+    },
+    {
+        "name": "conversions",
+        "type": "record",
+        "mode": "repeated",
+        "fields": [
+            {
+                "name": "action_type",
+                "type": "STRING"
+            },
+            {
+                "name": "value",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_1d_click",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_7d_click",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_28d_click",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_1d_view",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_7d_view",
+                "type": "FLOAT"
+            },
+            {
+                "name": "_28d_view",
+                "type": "FLOAT"
+            }
+        ]
+    },
+    {
+        "name": "conversion_values",
         "type": "record",
         "mode": "repeated",
         "fields": [
