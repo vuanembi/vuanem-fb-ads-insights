@@ -177,7 +177,7 @@ def main(request):
     VuaNemTk01 = FacebookAdsInsightsJob(
         "act_2419414334994459", "Ads_Insights_VuaNemTk01"
     )
-    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", "AdsInsights_VuaNemUSD")
+    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", "Ads_Insights_VuaNemUSD")
 
     results = {
         "pipelines": "Facebook Ads Insights",
