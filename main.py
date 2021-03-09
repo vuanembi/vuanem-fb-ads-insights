@@ -92,11 +92,10 @@ class FacebookAdsInsightsJob:
         return result
 
     async def fetch_one(self, sessions, dt):
-        """Fetch & upload one day of data
+        """Fetch one day of data
 
         Args:
             sessions (aiohttp.ClientSession): Client to requests API
-            storage_client (gcloud.aio.storage.Storage): Storage Client to upload
             dt (str): Date in %Y-%m-%d
         """
 
@@ -121,11 +120,10 @@ class FacebookAdsInsightsJob:
         results = response.get("data")
 
         if len(results) > 0:
-            results = list(map(self.transform_result, results))
             self.num_processed += 1
+            return list(map(self.transform_result, results))
         else:
-            results = None
-        return results
+            return None
 
     async def fetch_all(self):
         """Organize fetching all data in specified date ranges"""
@@ -141,14 +139,18 @@ class FacebookAdsInsightsJob:
 
         rows = [i for i in rows if i is not None]
         rows = [i for sublist in rows for i in sublist]
-        rows = [dict(item, **{"_batched_at": self.job_ts}) for item in rows]
-        return rows
+        return [dict(item, **{"_batched_at": self.job_ts}) for item in rows]
 
     def run(self):
+        """Main extract & load operation
+
+        Returns:
+            dict: Response for server
+        """
         client = bigquery.Client()
         rows = asyncio.run(self.fetch_all())
 
-        with open("schemas\AdsInsights.json") as f:
+        with open(r"schemas\AdsInsights.json") as f:
             schema = json.load(f)
 
         load_to_stage_job = client.load_table_from_json(
@@ -175,10 +177,11 @@ def main(request):
     VuaNemTk01 = FacebookAdsInsightsJob(
         "act_2419414334994459", "Ads_Insights_VuaNemTk01"
     )
-    # VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", 'AdsInsights_VuaNemUSD')
+    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", "AdsInsights_VuaNemUSD")
+
     results = {
         "pipelines": "Facebook Ads Insights",
-        "results": [VuaNemTk01.run()],  # , VuaNemUSD.run()],
+        "results": [VuaNemTk01.run(), VuaNemUSD.run()],
     }
     print(results)
 
