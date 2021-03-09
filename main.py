@@ -150,7 +150,7 @@ class FacebookAdsInsightsJob:
         client = bigquery.Client()
         rows = asyncio.run(self.fetch_all())
 
-        with open("schemas\AdsInsights.json") as f:
+        with open("schemas/AdsInsights.json") as f:
             schema = json.load(f)
 
         load_to_stage_job = client.load_table_from_json(
