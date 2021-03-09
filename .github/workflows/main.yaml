@@ -17,8 +17,7 @@ jobs:
           env_vars: "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},\
             TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},\
             TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }},\
-            API_VER=${{ secrets.API_VER }},\
-            BUCKET=${{ secrets.BUCKET }}"
+            API_VER=${{ secrets.API_VER }}"
           entry_point: main
           runtime: python38
           service_account_email: ${{ secrets.GCP_SA }}

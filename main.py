@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import requests
 import aiohttp
 from tqdm import tqdm
-from gcloud.aio.storage import Storage
+from google.cloud import bigquery
 
 # To run asyncio on Windows
 if sys.platform == "win32":
@@ -15,22 +15,21 @@ if sys.platform == "win32":
 
 
 class FacebookAdsInsightsJob:
-    def __init__(self, ads_account, path, **kwargs):
+    def __init__(self, ads_account, table, **kwargs):
         """Init. Getting env & configs from envs"""
 
         self.ads_account = ads_account
-        self.path = 'facebook/' + path + '/'
-        
+        self.dataset = "Facebook"
+        self.table = table
+
         self.access_token = os.getenv("ACCESS_TOKEN")
         self.api_ver = os.getenv("API_VER")
-        self.bucket = os.getenv("BUCKET")
-
 
         with open("config.json", "r") as f:
             config = json.load(f)
         self.fields = config.get("fields")
         self.windows = config.get("action_attribution_windows")
-        self.fields_with_windows = config.get('fields_with_windows')
+        self.fields_with_windows = config.get("fields_with_windows")
         self.dict_windows = self.windows_map()
 
         if "end_date" in kwargs:
@@ -46,6 +45,7 @@ class FacebookAdsInsightsJob:
             self.start_date = datetime.now() - timedelta(days=30)
 
         self.num_processed = 0
+        self.job_ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def windows_map(self):
         """Change fields name to adhere to column name
@@ -91,7 +91,7 @@ class FacebookAdsInsightsJob:
                             i["_" + k] = i.pop(k)
         return result
 
-    async def fetch_one(self, sessions, storage_client, dt):
+    async def fetch_one(self, sessions, dt):
         """Fetch & upload one day of data
 
         Args:
@@ -122,51 +122,63 @@ class FacebookAdsInsightsJob:
 
         if len(results) > 0:
             results = list(map(self.transform_result, results))
-            results = "\n".join([json.dumps(result) for result in results])
-
-            status = await storage_client.upload(
-                self.bucket,
-                self.path + dt + ".json",
-                results,
-                timeout=60,
-            )
-            if status.get("md5Hash") is not None:
-                self.num_processed += 1
+            self.num_processed += 1
+        else:
+            results = None
+        return results
 
     async def fetch_all(self):
         """Organize fetching all data in specified date ranges"""
 
         date_ranges = self.generate_time_ranges()
-        async with aiohttp.ClientSession() as sessions, Storage(
-            session=aiohttp.ClientSession()
-        ) as storage_client:
+        async with aiohttp.ClientSession() as sessions:
             tasks = [
-                asyncio.create_task(self.fetch_one(sessions, storage_client, dt))
-                for dt in date_ranges
+                asyncio.create_task(self.fetch_one(sessions, dt)) for dt in date_ranges
             ]
-            _ = [await f for f in tqdm(asyncio.as_completed(tasks), total=len(tasks))]
+            rows = [
+                await f for f in tqdm(asyncio.as_completed(tasks), total=len(tasks))
+            ]
+
+        rows = [i for i in rows if i is not None]
+        rows = [i for sublist in rows for i in sublist]
+        rows = [dict(item, **{"_batched_at": self.job_ts}) for item in rows]
+        return rows
 
     def run(self):
-        """Run
+        client = bigquery.Client()
+        rows = asyncio.run(self.fetch_all())
 
-        Returns:
-            dict: JSON response for server
-        """
-        asyncio.run(self.fetch_all())
+        with open("schemas\AdsInsights.json") as f:
+            schema = json.load(f)
+
+        load_to_stage_job = client.load_table_from_json(
+            rows,
+            f"{self.dataset}._stage_{self.table}",
+            job_config=bigquery.LoadJobConfig(
+                schema=schema,
+                create_disposition="CREATE_IF_NEEDED",
+                write_disposition="WRITE_APPEND",
+            ),
+        ).result()
+
         return {
             "ads_account": self.ads_account,
             "start_date": self.start_date.strftime("%Y-%m-%d"),
             "end_date": self.end_date.strftime("%Y-%m-%d"),
             "num_processed": self.num_processed,
+            "output_rows": load_to_stage_job.output_rows,
+            "load_errors": load_to_stage_job.errors,
         }
 
 
 def main(request):
-    VuaNemTk01 = FacebookAdsInsightsJob("act_2419414334994459", 'AdsInsights_VuaNemTk01')
-    VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", 'AdsInsights_VuaNemUSD')
+    VuaNemTk01 = FacebookAdsInsightsJob(
+        "act_2419414334994459", "Ads_Insights_VuaNemTk01"
+    )
+    # VuaNemUSD = FacebookAdsInsightsJob("act_808142069649310", 'AdsInsights_VuaNemUSD')
     results = {
         "pipelines": "Facebook Ads Insights",
-        "results": [VuaNemTk01.run(), VuaNemUSD.run()],
+        "results": [VuaNemTk01.run()],  # , VuaNemUSD.run()],
     }
     print(results)
 

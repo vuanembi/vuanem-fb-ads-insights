@@ -9,15 +9,15 @@
     },
     {
         "name": "campaign_id",
-        "type": "STRING"
+        "type": "INTEGER"
     },
     {
         "name": "adset_id",
-        "type": "STRING"
+        "type": "INTEGER"
     },
     {
         "name": "ad_id",
-        "type": "STRING"
+        "type": "INTEGER"
     },
     {
         "name": "campaign_name",
@@ -288,5 +288,9 @@
                 "type": "FLOAT"
             }
         ]
+    },
+    {
+        "name": "_batched_at",
+        "type": "TIMESTAMP"
     }
 ]

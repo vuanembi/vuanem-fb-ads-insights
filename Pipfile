@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiohttp = "~=3.7.3"
-gcloud-aio-storage = "*"
+aiohttp = "*"
 tqdm = "*"
 python-dotenv = "*"
 requests = "*"
+google-cloud-bigquery = "*"
 
 [dev-packages]
 black = "*"
