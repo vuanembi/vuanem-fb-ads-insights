@@ -30,7 +30,6 @@ class FacebookAdsInsightsJob:
         self.fields = config.get("fields")
         self.windows = config.get("action_attribution_windows")
         self.fields_with_windows = config.get("fields_with_windows")
-        self.dict_windows = self.windows_map()
 
         if "end_date" in kwargs:
             self.manual = True
@@ -42,22 +41,10 @@ class FacebookAdsInsightsJob:
         if "start_date" in kwargs:
             self.start_date = datetime.strptime(kwargs["start_date"], "%Y-%m-%d")
         else:
-            self.start_date = datetime.now() - timedelta(days=30)
+            self.start_date = datetime.now() - timedelta(days=28)
 
         self.num_processed = 0
         self.job_ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    def windows_map(self):
-        """Change fields name to adhere to column name
-
-        Returns:
-            dict: Mapping
-        """
-
-        dict_windows = {}
-        for field in self.windows:
-            dict_windows[field] = "_" + field
-        return dict_windows
 
     def generate_time_ranges(self):
         """Generate date ranges between two dates
@@ -86,9 +73,10 @@ class FacebookAdsInsightsJob:
             actions = result.get(nest)
             if actions:
                 for i in actions:
-                    for k in list(i.keys()):
-                        if k in self.dict_windows:
-                            i["_" + k] = i.pop(k)
+                    for k in list(
+                        filter(lambda x: x not in ["value", "action_type"], list(i.keys()))
+                    ):
+                        i["_" + k] = i.pop(k)
         return result
 
     async def fetch_one(self, sessions, dt):
@@ -119,7 +107,7 @@ class FacebookAdsInsightsJob:
             response = await r.json()
         results = response.get("data")
 
-        if len(results) > 0:
+        if results is not None:
             self.num_processed += 1
             return list(map(self.transform_result, results))
         else:
@@ -141,19 +129,13 @@ class FacebookAdsInsightsJob:
         rows = [i for sublist in rows for i in sublist]
         return [dict(item, **{"_batched_at": self.job_ts}) for item in rows]
 
-    def run(self):
-        """Main extract & load operation
-
-        Returns:
-            dict: Response for server
-        """
+    def load(self, rows):
         client = bigquery.Client()
-        rows = asyncio.run(self.fetch_all())
 
         with open("schemas/AdsInsights.json") as f:
             schema = json.load(f)
 
-        load_to_stage_job = client.load_table_from_json(
+        return client.load_table_from_json(
             rows,
             f"{self.dataset}._stage_{self.table}",
             job_config=bigquery.LoadJobConfig(
@@ -163,13 +145,25 @@ class FacebookAdsInsightsJob:
             ),
         ).result()
 
+    def run(self):
+        """Main extract & load operation
+
+        Returns:
+            dict: Response for server
+        """
+        try:
+            rows = asyncio.run(self.fetch_all())
+            load_results = self.load(rows)
+        except AssertionError:
+            load_results = None
+
         return {
             "ads_account": self.ads_account,
             "start_date": self.start_date.strftime("%Y-%m-%d"),
             "end_date": self.end_date.strftime("%Y-%m-%d"),
             "num_processed": self.num_processed,
-            "output_rows": load_to_stage_job.output_rows,
-            "load_errors": load_to_stage_job.errors,
+            "output_rows": getattr(load_results, "output_rows", None),
+            "load_errors": getattr(load_results, "errors", None),
         }
 
 
