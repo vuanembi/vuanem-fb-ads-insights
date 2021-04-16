@@ -1,12 +1,11 @@
-import requests
+from unittest.mock import Mock
+
+from main import main
+
 
 def test_auto():
-    with requests.get('http://localhost:8080') as r:
-        response = r.json()
-    results = response.get('results')
-    for i in results:
-        assert i['start_date'] is not None
-        assert i['end_date'] is not None
-        assert i['num_processed'] > 0
-        assert i['output_rows'] > 0
-        assert i['load_errors'] is None
+    data = {}
+    req = Mock(get_json=Mock(return_value=data), args=data)
+    res = main(req)
+    for i in res["results"]:
+        assert i["output_rows"] > 0

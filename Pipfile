@@ -15,6 +15,7 @@ black = "*"
 functions-framework = "*"
 pylint = "*"
 pytest = "*"
+pytest-dotenv = "*"
 
 [requires]
 python_version = "3.8"
