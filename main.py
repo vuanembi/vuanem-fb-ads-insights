@@ -103,7 +103,6 @@ class FacebookAdsInsights:
             elif res["async_status"] in ["Job Failed", "Job Skipped"]:
                 raise RuntimeError
             else:
-                print(res["async_percent_completion"])
                 time.sleep(3)
 
     def _fetch_insights(self, report_run_id):
@@ -255,4 +254,13 @@ def main(event, context):
     }
     print(results)
 
+    _ = requests.post(
+        "https://api.telegram.org/bot{token}/sendMessage".format(
+            token=os.getenv("TELEGRAM_TOKEN")
+        ),
+        json={
+            "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
+            "text": json.dumps(results, indent=4),
+        },
+    )
     return results
