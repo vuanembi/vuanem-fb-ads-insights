@@ -1,0 +1,47 @@
+{
+    "key": {
+        "p_key": [
+            "date_start",
+            "date_stop",
+            "campaign_id",
+            "adset_id",
+            "ad_id"
+        ],
+        "incremental_key": "_batched_at",
+        "partition_key": "date_start"
+    },
+    "field": {
+        "action_attribution_windows": [
+            "1d_click",
+            "1d_view",
+            "7d_click",
+            "7d_view",
+            "28d_click",
+            "28d_view"
+        ],
+        "fields_with_windows": [
+            "actions",
+            "action_values",
+            "cost_per_action_type"
+        ],
+        "fields": [
+            "date_start",
+            "date_stop",
+            "campaign_id",
+            "adset_id",
+            "ad_id",
+            "campaign_name",
+            "adset_name",
+            "ad_name",
+            "reach",
+            "impressions",
+            "cpc",
+            "cpm",
+            "frequency",
+            "spend",
+            "actions",
+            "action_values",
+            "cost_per_action_type"
+        ]
+    }
+}

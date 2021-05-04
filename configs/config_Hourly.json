@@ -1,0 +1,42 @@
+{
+    "key": {
+        "p_key": [
+            "date_start",
+            "date_stop",
+            "hourly_stats_aggregated_by_advertiser_time_zone"
+        ],
+        "incremental_key": "_batched_at",
+        "partition_key": "date_start"
+    },
+    "field": {
+        "action_attribution_windows": [
+            "1d_click",
+            "1d_view",
+            "7d_click",
+            "7d_view",
+            "28d_click",
+            "28d_view"
+        ],
+        "fields_with_windows": [
+            "actions",
+            "action_values",
+            "conversions",
+            "conversion_values",
+            "cost_per_action_type",
+            "purchase_roas"
+        ],
+        "fields": [
+            "date_start",
+            "date_stop",
+            "reach",
+            "impressions",
+            "cpc",
+            "cpm",
+            "frequency",
+            "spend",
+            "actions",
+            "action_values",
+            "cost_per_action_type"
+        ]
+    }
+}
