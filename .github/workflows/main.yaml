@@ -49,4 +49,4 @@ jobs:
           --runtime=python38
           --trigger-topic=${{ env.TOPIC_ID }}
           --service-account=${{ secrets.GCP_SA }}
-          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},API_VER=${{ secrets.API_VER }},ADS_ACCOUNT=${{ secrets[matrix.ADS_ACCOUNT] }},TABLE=${{ env.TABLE }}
+          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},API_VER=${{ secrets.API_VER }},ADS_ACCOUNT=${{ secrets[matrix.ADS_ACCOUNT] }},TABLE=${{ env.TABLE }},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
