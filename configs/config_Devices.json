@@ -3,9 +3,7 @@
         "p_key": [
             "date_start",
             "date_stop",
-            "campaign_id",
-            "adset_id",
-            "ad_id"
+            "device_platform"
         ],
         "incremental_key": "_batched_at"
     },
@@ -21,20 +19,12 @@
         "fields_with_windows": [
             "actions",
             "action_values",
-            "conversions",
-            "conversion_values",
             "cost_per_action_type",
             "purchase_roas"
         ],
         "fields": [
             "date_start",
             "date_stop",
-            "campaign_id",
-            "adset_id",
-            "ad_id",
-            "campaign_name",
-            "adset_name",
-            "ad_name",
             "reach",
             "impressions",
             "cpc",
@@ -43,8 +33,7 @@
             "spend",
             "actions",
             "action_values",
-            "cost_per_action_type",
-            "purchase_roas"
+            "cost_per_action_type"
         ]
     }
 }

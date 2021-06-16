@@ -1,4 +1,5 @@
 [
+
     {
         "name": "account_id",
         "type": "INTEGER"
@@ -12,27 +13,11 @@
         "type": "DATE"
     },
     {
-        "name": "campaign_id",
-        "type": "INTEGER"
-    },
-    {
-        "name": "adset_id",
-        "type": "INTEGER"
-    },
-    {
-        "name": "ad_id",
-        "type": "INTEGER"
-    },
-    {
-        "name": "campaign_name",
+        "name": "age",
         "type": "STRING"
     },
     {
-        "name": "adset_name",
-        "type": "STRING"
-    },
-    {
-        "name": "ad_name",
+        "name": "gender",
         "type": "STRING"
     },
     {
@@ -138,124 +123,7 @@
         ]
     },
     {
-        "name": "conversions",
-        "type": "record",
-        "mode": "repeated",
-        "fields": [
-            {
-                "name": "action_type",
-                "type": "STRING"
-            },
-            {
-                "name": "value",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_1d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_7d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_28d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_1d_view",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_7d_view",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_28d_view",
-                "type": "FLOAT"
-            }
-        ]
-    },
-    {
-        "name": "conversion_values",
-        "type": "record",
-        "mode": "repeated",
-        "fields": [
-            {
-                "name": "action_type",
-                "type": "STRING"
-            },
-            {
-                "name": "value",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_1d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_7d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_28d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_1d_view",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_7d_view",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_28d_view",
-                "type": "FLOAT"
-            }
-        ]
-    },
-    {
         "name": "cost_per_action_type",
-        "type": "record",
-        "mode": "repeated",
-        "fields": [
-            {
-                "name": "action_type",
-                "type": "STRING"
-            },
-            {
-                "name": "value",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_1d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_7d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_28d_click",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_1d_view",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_7d_view",
-                "type": "FLOAT"
-            },
-            {
-                "name": "_28d_view",
-                "type": "FLOAT"
-            }
-        ]
-    },
-    {
-        "name": "purchase_roas",
         "type": "record",
         "mode": "repeated",
         "fields": [

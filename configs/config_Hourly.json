@@ -5,8 +5,7 @@
             "date_stop",
             "hourly_stats_aggregated_by_advertiser_time_zone"
         ],
-        "incremental_key": "_batched_at",
-        "partition_key": "date_start"
+        "incremental_key": "_batched_at"
     },
     "field": {
         "action_attribution_windows": [
@@ -20,8 +19,6 @@
         "fields_with_windows": [
             "actions",
             "action_values",
-            "conversions",
-            "conversion_values",
             "cost_per_action_type",
             "purchase_roas"
         ],

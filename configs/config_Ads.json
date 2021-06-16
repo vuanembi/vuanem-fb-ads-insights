@@ -1,0 +1,16 @@
+{
+    "key": {
+        "p_key": [
+            "id"
+        ],
+        "incremental_key": "_batched_at"
+    },
+    "field": {
+        "fields": [
+            "id",
+            "body",
+            "creative",
+            "name"
+        ]
+    }
+}

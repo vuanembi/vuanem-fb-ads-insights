@@ -8,11 +8,12 @@ python-dotenv = "*"
 requests = "*"
 google-cloud-bigquery = "*"
 jinja2 = "*"
+aiohttp = "*"
+google-cloud-pubsub = "*"
 
 [dev-packages]
 black = "*"
 functions-framework = "*"
-pylint = "*"
 pytest = "*"
 pytest-dotenv = "*"
 

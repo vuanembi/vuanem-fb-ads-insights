@@ -1,0 +1,13 @@
+SELECT
+    DISTINCT {{ id_key }}
+FROM
+    `{{ dataset }}.AdsInsights`
+WHERE
+    {{ id_key }} NOT IN (
+        SELECT
+            DISTINCT {{ id_key }}
+        FROM
+            `{{ dataset }}.AdsCreatives`
+    )
+LIMIT
+    400

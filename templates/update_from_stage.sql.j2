@@ -1,5 +1,5 @@
 CREATE
-OR REPLACE TABLE {{ dataset }}.{{ table }} PARTITION BY {{ partition_key }} AS
+OR REPLACE TABLE `{{ dataset }}`.`{{ table }}` AS
 SELECT
     *
 EXCEPT

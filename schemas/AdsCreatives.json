@@ -1,0 +1,42 @@
+[
+    {
+        "name": "id",
+        "type": "INTEGER"
+    },
+    {
+        "name": "body",
+        "type": "STRING"
+    },
+    {
+        "name": "image_url",
+        "type": "STRING"
+    },
+    {
+        "name": "name",
+        "type": "STRING"
+    },
+    {
+        "name": "link_url",
+        "type": "STRING"
+    },
+    {
+        "name": "title",
+        "type": "STRING"
+    },
+    {
+        "name": "thumbnail_url",
+        "type": "STRING"
+    },
+    {
+        "name": "object_url",
+        "type": "STRING"
+    },
+    {
+        "name": "ad_id",
+        "type": "INTEGER"
+    },
+    {
+        "name": "_batched_at",
+        "type": "TIMESTAMP"
+    }
+]
