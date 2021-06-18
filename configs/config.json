@@ -38,6 +38,8 @@
             "reach",
             "impressions",
             "cpc",
+            "unique_inline_link_clicks",
+            "unique_clicks",
             "cpm",
             "frequency",
             "spend",

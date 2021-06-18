@@ -48,6 +48,14 @@
         "type": "FLOAT"
     },
     {
+        "name": "unique_inline_link_clicks",
+        "type": "INTEGER"
+    },
+    {
+        "name": "unique_clicks",
+        "type": "INTEGER"
+    },
+    {
         "name": "cpm",
         "type": "FLOAT"
     },

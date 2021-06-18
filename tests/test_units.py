@@ -15,9 +15,9 @@ def test_auto():
 
 def test_manual_standard():
     data = {
-        "ads_account_id": "act_2419414334994459",
-        "start": "2021-05-01",
-        "end": "2021-06-01",
+        "ads_account_id": "act_808142069649310",
+        "start": "2021-04-01",
+        "end": "2021-05-01",
     }
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
