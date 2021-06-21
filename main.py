@@ -2,7 +2,7 @@ import json
 import base64
 
 import models
-from broadcaster import broadcast
+from broadcast import broadcast
 
 
 def main(request):
@@ -50,7 +50,6 @@ def main(request):
                         mode=i,
                     )
                     for i in [
-                        None,
                         "hourly",
                         "devices",
                         "country_region",

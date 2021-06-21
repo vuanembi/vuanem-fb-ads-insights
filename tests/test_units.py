@@ -6,7 +6,7 @@ from .utils import assertion, encode_data
 
 
 def test_auto():
-    data = {"ads_account_id": "act_3921338037921594"}
+    data = {"ads_account_id": "act_3921338037921594", "mode": None}
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
     res = main(req)
@@ -16,8 +16,9 @@ def test_auto():
 def test_manual_standard():
     data = {
         "ads_account_id": "act_808142069649310",
-        "start": "2021-04-01",
-        "end": "2021-05-01",
+        "start": "2021-01-01",
+        "end": "2021-02-01",
+        "mode": None,
     }
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)

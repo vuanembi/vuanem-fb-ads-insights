@@ -27,8 +27,8 @@ def broadcast(broadcast_mode):
 
     for ads_account_id in running_ads_accounts:
         data = {"ads_account_id": ads_account_id}
-        if broadcast_mode == "ads_creatives":
-            data["mode"] = "ads_creatives"
+        if broadcast_mode == "ads_insights":
+            data["mode"] = None
         message_json = json.dumps(data)
         message_bytes = message_json.encode("utf-8")
         publisher.publish(topic_path, data=message_bytes).result()
