@@ -1,9 +1,5 @@
-from asyncio.runners import run
 import os
 import json
-import asyncio
-
-import aiohttp
 from google.cloud import pubsub_v1
 
 API_VER = os.getenv("API_VER")
@@ -13,6 +9,12 @@ BUSINESS_ID = "444284753088897"
 
 
 def get_ads_accounts():
+    """Get Ads Accounts ID
+
+    Returns:
+        list: List of ID
+    """
+
     return [
         "act_808142069649310",
         "act_2419414334994459",
@@ -21,6 +23,15 @@ def get_ads_accounts():
 
 
 def broadcast(broadcast_mode):
+    """Broadcast jobs to PubSub
+
+    Args:
+        broadcast_mode (str): Broadcast mode
+
+    Returns:
+        int: Number of messages
+    """
+    
     running_ads_accounts = get_ads_accounts()
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), os.getenv("TOPIC_ID"))

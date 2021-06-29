@@ -53,7 +53,6 @@ def main(request):
                         "hourly",
                         "devices",
                         "country_region",
-                        # "ads_creatives",
                     ]
                 ]
             responses = {

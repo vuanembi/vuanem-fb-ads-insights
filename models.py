@@ -27,6 +27,7 @@ BQ_CLIENT = bigquery.Client()
 class AdsAPI(metaclass=ABCMeta):
     def __init__(self, ads_account_id, start, end, mode):
         """Init. Getting env & configs from envs"""
+
         self.session = self._init_session()
         self.ads_account_id = ads_account_id
         self.num_processed = 0
@@ -40,6 +41,18 @@ class AdsAPI(metaclass=ABCMeta):
 
     @staticmethod
     def factory(ads_account_id, start=None, end=None, mode=None):
+        """Factory Method to create Facebook Ads Pipelines
+
+        Args:
+            ads_account_id (str): Ads Account ID
+            start (str, optional): Date in %Y-%m-%d. Defaults to None.
+            end (str, optional): Date in %Y-%m-%d. Defaults to None.
+            mode (str, optional): Mode to run. Defaults to None.
+
+        Returns:
+            AdsAPI: Pipelines
+        """
+
         if mode is not None:
             if mode == "hourly":
                 return AdsInsightsHourly(ads_account_id, start, end, mode)
@@ -55,6 +68,8 @@ class AdsAPI(metaclass=ABCMeta):
             return AdsInsightsStandard(ads_account_id, start, end, mode)
 
     def init_config(self):
+        """Initialize config from json"""
+
         config = self._init_config()
         self.field = config.get("field")
         self.fields = self.field.get("fields")
@@ -64,9 +79,25 @@ class AdsAPI(metaclass=ABCMeta):
 
     @abstractmethod
     def _init_config(self):
+        """Get config file
+
+        Returns:
+            dict: Configs
+        """
+
         raise NotImplementedError
 
     def init_time_range(self, start, end):
+        """Get time range to get data
+
+        Args:
+            start (str): Date in %Y-%m-%d
+            end (str): Date in %Y-%m-%d
+
+        Returns:
+            tuple: (start, end, date_preset)
+        """
+                
         if start and end:
             return start, end, None
         else:
@@ -101,6 +132,15 @@ class AdsAPI(metaclass=ABCMeta):
         raise NotImplementedError
 
     def get_ads_account_name(self):
+        """Get Ads Account Name to determine dataset
+
+        Raises:
+            e: Exception
+
+        Returns:
+            str: Ads Account Name
+        """
+
         url = f"{BASE_URL}{self.ads_account_id}"
         try:
             with self.session.get(
@@ -119,10 +159,25 @@ class AdsAPI(metaclass=ABCMeta):
 
     @abstractmethod
     def fetch(self):
+        """Abstract Method to fetch Data
+
+        Returns:
+            list: List of dicts
+        """
+
         raise NotImplementedError
 
     @abstractmethod
     def transform(self, rows):
+        """Abstract Method to transform data
+
+        Args:
+            rows (list): List of dicts
+
+        Raises:
+            list: List of dicts
+        """
+
         raise NotImplementedError
 
     def load(self, rows):
@@ -137,7 +192,7 @@ class AdsAPI(metaclass=ABCMeta):
 
         schema = self._schema_factory()
 
-        return BQ_CLIENT.load_table_from_json(
+        loads = BQ_CLIENT.load_table_from_json(
             rows,
             f"{DATASET}._stage_{self.table}",
             job_config=bigquery.LoadJobConfig(
@@ -146,6 +201,7 @@ class AdsAPI(metaclass=ABCMeta):
                 write_disposition="WRITE_APPEND",
             ),
         ).result()
+        return loads
 
     @abstractmethod
     def _schema_factory(self):
@@ -174,7 +230,7 @@ class AdsAPI(metaclass=ABCMeta):
         """Main extract & load operation
 
         Returns:
-            dict: Response for server
+            dict: Job Results
         """
 
         rows = self.fetch()
