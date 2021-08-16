@@ -9,12 +9,12 @@ def main(request):
     """Main function as gateway
 
     Args:
-        event (dict): PubSubMessage
-        context (google.cloud.functions.Context): Event Context
+        request (flask.Request): HTTP request 
 
     Returns:
-        dict: models results
+        dict: Responses
     """
+
     request_json = request.get_json()
     message = request_json["message"]
     data_bytes = message["data"]
@@ -23,25 +23,18 @@ def main(request):
 
     if data:
         if "broadcast" in data:
-            if data["broadcast"] in ["ads_insights", "ads_creatives"]:
-                message_sent = broadcast(data["broadcast"])
+            if data["broadcast"] in [
+                "standard",
+                "ads_creatives",
+                "misc",
+            ]:
+                message_sent = broadcast(data)
             else:
-                raise NotImplementedError(data["broadcast"])
+                raise NotImplementedError(data)
 
-            responses = {"message_sent": message_sent, "run": data["broadcast"]}
-            print(responses)
-            return responses
-        if "ads_account_id" in data:
-            if "mode" in data:
-                jobs = [
-                    models.AdsAPI.factory(
-                        ads_account_id=data.get("ads_account_id"),
-                        start=data.get("start"),
-                        end=data.get("end"),
-                        mode=data.get("mode"),
-                    )
-                ]
-            else:
+            results = {"message_sent": message_sent, "run": data["broadcast"]}
+        elif "ads_account_id" in data and "broadcast" not in data:
+            if "mode" == "misc":
                 jobs = [
                     models.AdsAPI.factory(
                         ads_account_id=data.get("ads_account_id"),
@@ -50,17 +43,32 @@ def main(request):
                         mode=i,
                     )
                     for i in [
-                        "hourly",
-                        "devices",
+                        # "hourly",
+                        # "devices",
                         "country_region",
+                        # "age_genders",
                     ]
                 ]
-            responses = {
-                "pipelines": "Facebook Ads Insights",
-                "results": [job.run() for job in jobs],
-            }
-            print(responses)
 
-            return responses
+            else:
+                jobs = [
+                    models.AdsAPI.factory(
+                        ads_account_id=data.get("ads_account_id"),
+                        start=data.get("start"),
+                        end=data.get("end"),
+                        mode=data.get("mode"),
+                    )
+                ]
+            results = [job.run() for job in jobs]
         else:
-            raise NotImplementedError
+            raise NotImplementedError(data)
+            
+        responses = {
+            "pipelines": "Facebook Ads Insights",
+            "results": results,
+        }
+        print(responses)
+
+        return responses
+    else:
+        raise NotImplementedError

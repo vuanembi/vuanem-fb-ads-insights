@@ -1,0 +1,247 @@
+{
+    "keys": {
+        "p_key": [
+            "date_start",
+            "date_stop",
+            "hourly_stats_aggregated_by_advertiser_time_zone"
+        ],
+        "incre_key": "_batched_at"
+    },
+    "fields": {
+        "action_attribution_windows": [
+            "1d_click",
+            "1d_view",
+            "7d_click",
+            "7d_view",
+            "28d_click",
+            "28d_view"
+        ],
+        "fields_with_windows": [
+            "actions",
+            "action_values",
+            "cost_per_action_type",
+            "cost_per_unique_action_type"
+        ],
+        "fields": [
+            "date_start",
+            "date_stop",
+            "reach",
+            "impressions",
+            "cpc",
+            "cpm",
+            "ctr",
+            "clicks",
+            "spend",
+            "actions",
+            "action_values",
+            "cost_per_action_type",
+            "cost_per_unique_action_type"
+        ]
+    },
+    "schema": [
+        {
+            "name": "account_id",
+            "type": "INTEGER"
+        },
+        {
+            "name": "date_start",
+            "type": "DATE"
+        },
+        {
+            "name": "date_stop",
+            "type": "DATE"
+        },
+        {
+            "name": "hourly_stats_aggregated_by_advertiser_time_zone",
+            "type": "STRING"
+        },
+        {
+            "name": "reach",
+            "type": "INTEGER"
+        },
+        {
+            "name": "impressions",
+            "type": "INTEGER"
+        },
+        {
+            "name": "cpc",
+            "type": "FLOAT"
+        },
+        {
+            "name": "cpm",
+            "type": "FLOAT"
+        },
+        {
+            "name": "ctr",
+            "type": "FLOAT"
+        },
+        {
+            "name": "clicks",
+            "type": "INTEGER"
+        },
+        {
+            "name": "spend",
+            "type": "FLOAT"
+        },
+        {
+            "name": "actions",
+            "type": "record",
+            "mode": "repeated",
+            "fields": [
+                {
+                    "name": "action_type",
+                    "type": "STRING"
+                },
+                {
+                    "name": "value",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_view",
+                    "type": "FLOAT"
+                }
+            ]
+        },
+        {
+            "name": "action_values",
+            "type": "record",
+            "mode": "repeated",
+            "fields": [
+                {
+                    "name": "action_type",
+                    "type": "STRING"
+                },
+                {
+                    "name": "value",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_view",
+                    "type": "FLOAT"
+                }
+            ]
+        },
+        {
+            "name": "cost_per_action_type",
+            "type": "record",
+            "mode": "repeated",
+            "fields": [
+                {
+                    "name": "action_type",
+                    "type": "STRING"
+                },
+                {
+                    "name": "value",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_view",
+                    "type": "FLOAT"
+                }
+            ]
+        },
+        {
+            "name": "cost_per_unique_action_type",
+            "type": "record",
+            "mode": "repeated",
+            "fields": [
+                {
+                    "name": "action_type",
+                    "type": "STRING"
+                },
+                {
+                    "name": "value",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_click",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_1d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_7d_view",
+                    "type": "FLOAT"
+                },
+                {
+                    "name": "_28d_view",
+                    "type": "FLOAT"
+                }
+            ]
+        },
+        {
+            "name": "_batched_at",
+            "type": "TIMESTAMP"
+        }
+    ]
+}
