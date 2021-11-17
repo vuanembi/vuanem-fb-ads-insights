@@ -1,5 +1,5 @@
-from models.models import FacebookAdsInsights
-from tasks import create_tasks
+from controller.pipelines import factory, run
+from controller.tasks import create_tasks
 
 
 def main(request):
@@ -9,12 +9,12 @@ def main(request):
     if "task" in data:
         response = create_tasks(data)
     elif "table" in data and "ads_account_id" in data:
-        response = FacebookAdsInsights.factory(
-            data["table"],
+        response = run(
+            factory(data["table"]),
             data["ads_account_id"],
             data.get("start"),
             data.get("end"),
-        ).run()
+        )
     else:
         raise ValueError(data)
 
