@@ -5,12 +5,11 @@ on:
   workflow_dispatch:
 
 env:
-  FUNCTIONS_NAME: vuanem_fb_ads_insights
-  REGION: us-central1
-  API_VER: v11.0
+  FUNCTION_NAME: vuanem_fb_ads_insights
+  PUBLIC_URL: https://us-central1-voltaic-country-280607.cloudfunctions.net/vuanem_fb_ads_insights
 
 jobs:
-  setup:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,13 +23,13 @@ jobs:
 
       - name: Deploy to Cloud Functions          
         run: >-
-          gcloud functions deploy ${{ env.FUNCTIONS_NAME }}
+          gcloud functions deploy ${{ env.FUNCTION_NAME }}
           --entry-point=main
-          --region=${{ env.REGION }}
+          --region=us-central1
           --timeout=530
           --project=${{ secrets.PROJECT_ID }}
           --memory=1024MB
-          --runtime=python38
+          --runtime=python39
           --trigger-http
           --service-account=${{ secrets.GCP_SA }}
-          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},API_VER=${{ env.API_VER }},PROJECT_ID=${{ secrets.PROJECT_ID }},TOPIC_ID=${{ secrets.TOPIC_ID }}
+          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},PUBLIC_URL=${{ env.PUBLIC_URL }}
