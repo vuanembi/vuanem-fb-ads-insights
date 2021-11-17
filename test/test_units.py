@@ -3,16 +3,14 @@ from unittest.mock import Mock
 import pytest
 
 from main import main
-from tasks import ACCOUNTS, TABLES
+from controller.tasks import ACCOUNTS, TABLES
 
 START = "2021-09-01"
 END = "2021-11-01"
 
 
 def run(data):
-    req = Mock(get_json=Mock(return_value=data), args=data)
-    res = main(req)
-    return res
+    return main(Mock(get_json=Mock(return_value=data), args=data))
 
 
 @pytest.mark.parametrize(
