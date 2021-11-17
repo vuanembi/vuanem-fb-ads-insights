@@ -6,9 +6,10 @@ on:
 
 env:
   FUNCTION_NAME: vuanem_fb_ads_insights
+  PUBLIC_URL: https://us-central1-voltaic-country-280607.cloudfunctions.net/vuanem_fb_ads_insights
 
 jobs:
-  setup:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,4 +32,4 @@ jobs:
           --runtime=python39
           --trigger-http
           --service-account=${{ secrets.GCP_SA }}
-          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},PROJECT_ID=${{ secrets.PROJECT_ID }}
+          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},PUBLIC_URL=${{ env.PUBLIC_URL }}
