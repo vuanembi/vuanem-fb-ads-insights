@@ -55,26 +55,25 @@ def create_tasks(tasks_data: dict) -> dict:
                 "http_method": tasks_v2.HttpMethod.POST,
                 "url": os.getenv("PUBLIC_URL"),
                 "oidc_token": {
-                    "service_account_email": SERVICE_ACCOUNT.service_account_email,
+                    "service_account_email": SERVICE_ACCOUNT.service_account_email
                 },
-                "headers": {
-                    "Content-type": "application/json",
-                },
+                "headers": {"Content-type": "application/json"},
                 "body": json.dumps(payload["payload"]).encode(),
             },
         }
         for payload in payloads
     ]
-    responses = [
-        TASKS_CLIENT.create_task(
-            request={
-                "parent": PARENT,
-                "task": task,
-            }
-        )
-        for task in tasks
-    ]
     return {
-        "tasks": len(responses),
+        "tasks": len(
+            [
+                TASKS_CLIENT.create_task(
+                    request={
+                        "parent": PARENT,
+                        "task": task,
+                    }
+                )
+                for task in tasks
+            ]
+        ),
         "tasks_data": tasks_data,
     }
