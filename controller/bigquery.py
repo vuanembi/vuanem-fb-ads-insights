@@ -1,4 +1,3 @@
-from typing import Callable
 from google.cloud import bigquery
 
 from models.AdsInsights.base import FBAdsInsights

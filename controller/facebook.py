@@ -89,7 +89,8 @@ def request_async_report(
 
 
 def poll_async_report(
-    session: requests.Session, report_run_id: ReportRunId
+    session: requests.Session,
+    report_run_id: ReportRunId,
 ) -> ReportRunId:
     with session.get(
         f"{BASE_URL}/{report_run_id}",
