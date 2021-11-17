@@ -37,7 +37,7 @@ def test_pipelines(table, account, start, end):
     res = run(
         {
             "table": table,
-            "ads_account_id": account["ad_account"],
+            "ads_account_id": account["ads_account_id"],
             "start": start,
             "end": end,
         }

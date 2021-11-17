@@ -2,7 +2,6 @@ import os
 import json
 from datetime import datetime
 import time
-from typing import Optional
 
 import requests
 
@@ -21,10 +20,8 @@ class AsyncFailedException(Exception):
 
 
 ReportRunId = str
-ReportRunRes = tuple[Optional[Exception], Optional[ReportRunId]]
 Insight = dict
 Insights = list[Insight]
-InsightsRes = tuple[Optional[Exception], Optional[Insights]]
 
 
 def request_async_report(
@@ -105,7 +102,6 @@ def poll_async_report(
     elif res["async_status"] == "Job Failed":
         raise AsyncFailedException(report_run_id)
     else:
-        print(res["async_percent_completion"])
         time.sleep(5)
         return poll_async_report(session, report_run_id)
 
@@ -145,7 +141,7 @@ def get_insights(
     session: requests.Session,
     report_run_id: ReportRunId,
     after: str = None,
-) -> InsightsRes:
+) -> Insights:
     try:
         with session.get(
             f"{BASE_URL}/{report_run_id}/insights",
@@ -174,7 +170,7 @@ def get(
     ads_account_id: str,
     start: datetime,
     end: datetime,
-) -> InsightsRes:
+) -> Insights:
     return get_insights(
         session,
         get_async_report(
