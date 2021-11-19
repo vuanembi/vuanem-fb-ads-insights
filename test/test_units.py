@@ -5,8 +5,8 @@ import pytest
 from main import main
 from controller.tasks import ACCOUNTS, TABLES
 
-START = "2021-09-01"
-END = "2021-11-01"
+START = "2021-11-01"
+END = "2021-11-18"
 
 
 def run(data):
@@ -25,8 +25,8 @@ def run(data):
 @pytest.mark.parametrize(
     ("start", "end"),
     [
-        (None, None),
-        # (START, END),
+        # (None, None),
+        (START, END),
     ],
     ids=[
         "auto",

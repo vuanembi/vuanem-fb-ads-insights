@@ -14,18 +14,18 @@ TABLES = [
 ]
 
 ACCOUNTS = [
-    # {
-    #     "client": "VuaNemUSD",
-    #     "ads_account_id": "act_808142069649310",
-    # },
-    # {
-    #     "client": "VuaNemTK01",
-    #     "ads_account_id": "act_2419414334994459",
-    # },
-    # {
-    #     "client": "NovaOn",
-    #     "ads_account_id": "act_3921338037921594",
-    # },
+    {
+        "client": "VuaNemUSD",
+        "ads_account_id": "act_808142069649310",
+    },
+    {
+        "client": "VuaNemTK01",
+        "ads_account_id": "act_2419414334994459",
+    },
+    {
+        "client": "NovaOn",
+        "ads_account_id": "act_3921338037921594",
+    },
     {
         "client": "DiamondVuaNemLZD",
         "ads_account_id": "act_796051681037501"
