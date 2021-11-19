@@ -6,6 +6,8 @@ on:
 
 env:
   FUNCTION_NAME: vuanem_fb_ads_insights
+  PROJECT_ID: voltaic-country-280607
+  GCP_SA: bivuanem@voltaic-country-280607.iam.gserviceaccount.com
   PUBLIC_URL: https://us-central1-voltaic-country-280607.cloudfunctions.net/vuanem_fb_ads_insights
 
 jobs:
@@ -21,15 +23,15 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - name: Deploy to Cloud Functions          
+      - name: Deploy to Cloud Functions
         run: >-
           gcloud functions deploy ${{ env.FUNCTION_NAME }}
           --entry-point=main
           --region=us-central1
           --timeout=530
-          --project=${{ secrets.PROJECT_ID }}
+          --project=${{ env.PROJECT_ID }}
           --memory=1024MB
           --runtime=python39
           --trigger-http
-          --service-account=${{ secrets.GCP_SA }}
-          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},PUBLIC_URL=${{ env.PUBLIC_URL }}
+          --service-account=${{ env.GCP_SA }}
+          --set-env-vars=ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }},PUBLIC_URL=${{ env.PUBLIC_URL }},${{ env.GCP_SA }}

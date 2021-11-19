@@ -5,7 +5,7 @@ import uuid
 from google.cloud import tasks_v2
 from google import auth
 
-SERVICE_ACCOUNT, PROJECT_ID = auth.default()
+_, PROJECT_ID = auth.default()
 TASKS_CLIENT = tasks_v2.CloudTasksClient()
 
 TABLES = [
@@ -25,6 +25,22 @@ ACCOUNTS = [
     {
         "client": "NovaOn",
         "ads_account_id": "act_3921338037921594",
+    },
+    {
+        "client": "DiamondVuaNemLZD",
+        "ads_account_id": "act_796051681037501"
+    },
+    {
+        "client": "DiamondVuaNemLZD",
+        "ads_account_id": "act_796051681037501"
+    },
+    {
+        "client": "DiamondVuaNemShopee",
+        "ads_account_id": "act_1082729769139634"
+    },
+    {
+        "client": "DiamondVuaNemTiki",
+        "ads_account_id": "act_796051681037501"
     },
 ]
 
@@ -55,7 +71,7 @@ def create_tasks(tasks_data: dict) -> dict:
                 "http_method": tasks_v2.HttpMethod.POST,
                 "url": os.getenv("PUBLIC_URL"),
                 "oidc_token": {
-                    "service_account_email": SERVICE_ACCOUNT.service_account_email
+                    "service_account_email": os.getenv('GCP_SA'),
                 },
                 "headers": {"Content-type": "application/json"},
                 "body": json.dumps(payload["payload"]).encode(),

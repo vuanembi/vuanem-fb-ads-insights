@@ -1,7 +1,7 @@
 from models.AdsInsights.base import FBAdsInsights
 
 AdsInsights_Region: FBAdsInsights = {
-    "name": "VideoInsights",
+    "name": "AdsInsights_Region",
     "fields": [
         "date_start",
         "date_stop",
