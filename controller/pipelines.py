@@ -15,6 +15,7 @@ DATE_FORMAT = "%Y-%m-%d"
 SESSION = requests.Session()
 BQ_CLIENT = bigquery.Client()
 
+DATASET = "IP_Facebook"
 
 def factory(table: str) -> FBAdsInsights:
     try:
@@ -62,7 +63,7 @@ def run(
         response["output_rows"] = load(
             BQ_CLIENT,
             model,
-            "Facebook",
+            DATASET,
             transform_add_batched_at(model["transform"](data)),
         )
     return response
