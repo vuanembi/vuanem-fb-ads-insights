@@ -25,8 +25,8 @@ def run(data):
 @pytest.mark.parametrize(
     ("start", "end"),
     [
-        # (None, None),
-        (START, END),
+        (None, None),
+        # (START, END),
     ],
     ids=[
         "auto",
@@ -55,11 +55,11 @@ def test_pipelines(table, account, start, end):
     ("start", "end"),
     [
         (None, None),
-        (START, END),
+        # (START, END),
     ],
     ids=[
         "auto",
-        "manual",
+        # "manual",
     ],
 )
 def test_tasks(table, start, end):

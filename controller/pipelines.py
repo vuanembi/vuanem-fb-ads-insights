@@ -5,8 +5,8 @@ from typing import Optional
 import requests
 from google.cloud import bigquery
 
-from controller.facebook import Insights, get
-from controller.bigquery import load
+from libs.facebook import Insights, get
+from libs.bigquery import load
 from models.AdsInsights.base import FBAdsInsights
 
 NOW = datetime.utcnow()
