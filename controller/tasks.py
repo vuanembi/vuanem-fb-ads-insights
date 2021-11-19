@@ -14,17 +14,33 @@ TABLES = [
 ]
 
 ACCOUNTS = [
+    # {
+    #     "client": "VuaNemUSD",
+    #     "ads_account_id": "act_808142069649310",
+    # },
+    # {
+    #     "client": "VuaNemTK01",
+    #     "ads_account_id": "act_2419414334994459",
+    # },
+    # {
+    #     "client": "NovaOn",
+    #     "ads_account_id": "act_3921338037921594",
+    # },
     {
-        "client": "VuaNemUSD",
-        "ads_account_id": "act_808142069649310",
+        "client": "DiamondVuaNemLZD",
+        "ads_account_id": "act_796051681037501"
     },
     {
-        "client": "VuaNemTK01",
-        "ads_account_id": "act_2419414334994459",
+        "client": "DiamondVuaNemLZD",
+        "ads_account_id": "act_796051681037501"
     },
     {
-        "client": "NovaOn",
-        "ads_account_id": "act_3921338037921594",
+        "client": "DiamondVuaNemShopee",
+        "ads_account_id": "act_1082729769139634"
+    },
+    {
+        "client": "DiamondVuaNemTiki",
+        "ads_account_id": "act_796051681037501"
     },
 ]
 
