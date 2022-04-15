@@ -30,7 +30,7 @@ device_insights = AdsInsights(
             "cpm": row.get("cpm"),
             "ctr": row.get("ctr"),
             "clicks": row.get("clicks"),
-            "spend": row["spend"],
+            "spend": row.get("spend"),
             "actions": [
                 {
                     "action_type": action.get("action_type"),
@@ -150,7 +150,6 @@ device_insights = AdsInsights(
                 {"name": "_7d_click", "type": "NUMERIC"},
             ],
         },
-        {"name": "_batched_at", "type": "TIMESTAMP"},
     ],
     [
         "date_start",
