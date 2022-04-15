@@ -1,74 +1,61 @@
-from unittest.mock import Mock
-
 import pytest
 
-from main import main
-from controller.tasks import ACCOUNTS, TABLES
+from facebook.pipeline import pipelines
+from facebook.facebook_service import pipeline_service
+from facebook.facebook_controller import facebook_controller
+from tasks.tasks_service import ACCOUNTS, tasks_service
 
-START = "2021-11-01"
-END = "2021-11-18"
+TIMEFRAME = [
+    # ("auto", (None, None)),
+    ("manual", ("2022-01-01", "2022-02-01")),
+]
 
 
-def run(data):
-    return main(Mock(get_json=Mock(return_value=data), args=data))
-
-
-@pytest.mark.parametrize(
-    "table",
-    TABLES,
+@pytest.fixture(
+    params=[i[1] for i in TIMEFRAME],
+    ids=[i[0] for i in TIMEFRAME],
 )
-@pytest.mark.parametrize(
-    "account",
-    ACCOUNTS,
-    ids=[i["client"] for i in ACCOUNTS],
-)
-@pytest.mark.parametrize(
-    ("start", "end"),
-    [
-        (None, None),
-        # (START, END),
-    ],
-    ids=[
-        "auto",
-        # "manual",
-    ],
-)
-def test_pipelines(table, account, start, end):
-    res = run(
-        {
-            "table": table,
-            "ads_account_id": account["ads_account_id"],
-            "start": start,
-            "end": end,
-        }
-    )
-    assert res["num_processed"] >= 0
-    if res["num_processed"] > 0:
-        assert res["output_rows"] == res["num_processed"]
+def timeframe(request):
+    return request.param
 
 
-@pytest.mark.parametrize(
-    "table",
-    TABLES,
+@pytest.fixture(
+    params=pipelines.values(),
+    ids=pipelines.keys(),
 )
-@pytest.mark.parametrize(
-    ("start", "end"),
-    [
-        (None, None),
-        # (START, END),
-    ],
-    ids=[
-        "auto",
-        # "manual",
-    ],
-)
-def test_tasks(table, start, end):
-    res = run(
-        {
-            "task": "fb",
-            "table": table,
-            "start": start,
-            "end": end,
-        }
-    )
-    assert res["tasks"] > 0
+def pipeline(request):
+    return request.param
+
+
+@pytest.fixture(params=ACCOUNTS)
+def account(request):
+    return request.param
+
+
+class TestFacebook:
+    def test_service(self, pipeline, account, timeframe):
+        res = pipeline_service(pipeline)(account, timeframe[0], timeframe[1])
+        res
+
+    def test_controller(self, pipeline, account, timeframe):
+        res = facebook_controller(
+            {
+                "table": pipeline.name,
+                "ads_account_id": account,
+                "start": timeframe[0],
+                "end": timeframe[1],
+            }
+        )
+        res
+
+
+class TestTask:
+    def test_service(self, pipeline, timeframe):
+        res = tasks_service(
+            {
+                "table": pipeline.name,
+                "start": timeframe[0],
+                "end": timeframe[1],
+            }
+        )
+        res
