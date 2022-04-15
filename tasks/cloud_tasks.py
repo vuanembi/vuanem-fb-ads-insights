@@ -8,16 +8,17 @@ from google import auth
 
 
 _, PROJECT_ID = auth.default()
-client = tasks_v2.CloudTasksClient()
 
 CLOUD_TASKS_PATH = (PROJECT_ID, "us-central1", "fb-ads-insights")
-PARENT = client.queue_path(*CLOUD_TASKS_PATH)
 
 
 def create_tasks(
     payloads: list[dict[str, Any]],
     name_fn: Callable[[dict[str, Any]], str],
 ) -> int:
+    client = tasks_v2.CloudTasksClient()
+    PARENT = client.queue_path(*CLOUD_TASKS_PATH)
+
     tasks = [
         {
             "name": client.task_path(
@@ -41,7 +42,7 @@ def create_tasks(
     return len(
         [
             client.create_task(
-                request={ # type: ignore
+                request={  # type: ignore
                     "parent": PARENT,
                     "task": task,
                 }

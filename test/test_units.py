@@ -1,7 +1,6 @@
 import pytest
 
-from facebook.pipeline import pipelines
-from facebook.facebook_service import pipeline_service
+from facebook.facebook_service import pipelines, pipeline_service
 from facebook.facebook_controller import facebook_controller
 from tasks.tasks_service import ACCOUNTS, tasks_service
 
