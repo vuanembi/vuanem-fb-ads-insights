@@ -2,7 +2,7 @@ from typing import Any
 
 from google.cloud import bigquery
 
-BQ_CLIENT = bigquery.Client()
+client = bigquery.Client()
 
 DATASET = "IP_Facebook"
 
@@ -22,7 +22,7 @@ def load(
             return 0
 
         output_rows = (
-            BQ_CLIENT.load_table_from_json(
+            client.load_table_from_json(
                 data,
                 f"{DATASET}.{table}_{ads_account_id}",
                 job_config=bigquery.LoadJobConfig(
@@ -41,7 +41,7 @@ def load(
 
 
 def _update(table: str, id_key: list[str], ads_account_id: str):
-    BQ_CLIENT.query(
+    client.query(
         f"""
     CREATE OR REPLACE TABLE {DATASET}.{table}_{ads_account_id} AS
     SELECT * EXCEPT(row_num) FROM

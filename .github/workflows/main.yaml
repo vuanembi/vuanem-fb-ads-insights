@@ -72,8 +72,8 @@ jobs:
           gcloud functions deploy ${{ needs.set-env.outputs.fn-name }}
           --entry-point=main
           --region=us-central1
-          --timeout=530
-          --memory=4096MB
+          --timeout=180
+          --memory=2048MB
           --runtime=python39
           --trigger-http
           --no-user-output-enabled

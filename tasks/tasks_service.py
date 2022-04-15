@@ -21,8 +21,8 @@ def tasks_service(body: dict[str, str]):
                     "start": body.get("start"),
                     "end": body.get("end"),
                 }
-                for i in pipelines.keys()
-                for a in i
+                for i in pipelines
+                for a in ACCOUNTS
             ],
             lambda x: x["table"],
         )

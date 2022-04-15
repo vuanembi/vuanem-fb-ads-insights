@@ -50,10 +50,9 @@ class TestFacebook:
 
 
 class TestTask:
-    def test_service(self, pipeline, timeframe):
+    def test_service(self, timeframe):
         res = tasks_service(
             {
-                "table": pipeline.name,
                 "start": timeframe[0],
                 "end": timeframe[1],
             }

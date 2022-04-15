@@ -8,9 +8,10 @@ from google import auth
 
 
 _, PROJECT_ID = auth.default()
-TASKS_CLIENT = tasks_v2.CloudTasksClient()
+client = tasks_v2.CloudTasksClient()
 
-CLOUD_TASKS_PATH = (PROJECT_ID, "us-central1", "tms")
+CLOUD_TASKS_PATH = (PROJECT_ID, "us-central1", "fb-ads-insights")
+PARENT = client.queue_path(*CLOUD_TASKS_PATH)
 
 
 def create_tasks(
@@ -19,25 +20,32 @@ def create_tasks(
 ) -> int:
     tasks = [
         {
-            "parent": TASKS_CLIENT.queue_path(*CLOUD_TASKS_PATH),
-            "task": {
-                "name": TASKS_CLIENT.task_path(
-                    *CLOUD_TASKS_PATH,
-                    task=f"{name_fn(payload)}-{uuid.uuid4()}",
-                ),
-                "http_request": {
-                    "http_method": tasks_v2.HttpMethod.POST,
-                    "url": os.getenv("PUBLIC_URL"),
-                    "oidc_token": {
-                        "service_account_email": os.getenv("GCP_SA"),
-                    },
-                    "headers": {
-                        "Content-type": "application/json",
-                    },
-                    "body": json.dumps(payload).encode(),
+            "name": client.task_path(
+                *CLOUD_TASKS_PATH,
+                task=f"{name_fn(payload)}-{uuid.uuid4()}",
+            ),
+            "http_request": {
+                "http_method": tasks_v2.HttpMethod.POST,
+                "url": os.getenv("PUBLIC_URL"),
+                "oidc_token": {
+                    "service_account_email": os.getenv("GCP_SA"),
                 },
+                "headers": {
+                    "Content-type": "application/json",
+                },
+                "body": json.dumps(payload).encode(),
             },
         }
         for payload in payloads
     ]
-    return len([TASKS_CLIENT.create_task(task) for task in tasks])
+    return len(
+        [
+            client.create_task(
+                request={ # type: ignore
+                    "parent": PARENT,
+                    "task": task,
+                }
+            )
+            for task in tasks
+        ]
+    )
