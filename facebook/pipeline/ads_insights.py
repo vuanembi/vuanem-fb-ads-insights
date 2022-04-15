@@ -1,6 +1,6 @@
 from facebook.pipeline.interface import AdsInsights
 
-ads_insights = AdsInsights(
+pipeline = AdsInsights(
     "AdsInsights",
     "ad",
     [

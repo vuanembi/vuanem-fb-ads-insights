@@ -1,7 +1,7 @@
 from facebook.pipeline.interface import AdsInsights
 
 
-video_insights = AdsInsights(
+pipeline = AdsInsights(
     "VideoInsights",
     "ad",
     [

@@ -1,7 +1,6 @@
 from typing import Any
 
-from facebook.pipeline import pipelines
-from facebook.facebook_service import pipeline_service
+from facebook.facebook_service import pipelines, pipeline_service
 
 
 def facebook_controller(body: dict[str, Any]):

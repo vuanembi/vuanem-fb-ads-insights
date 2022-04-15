@@ -1,4 +1,4 @@
-from facebook.pipeline import pipelines
+from facebook.facebook_service import pipelines
 from tasks import cloud_tasks
 
 ACCOUNTS = [

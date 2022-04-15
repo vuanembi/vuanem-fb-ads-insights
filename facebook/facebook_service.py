@@ -3,9 +3,30 @@ from datetime import datetime, timedelta
 
 from compose import compose
 
+from db.bigquery import load
 from facebook.pipeline.interface import AdsInsights
 from facebook.facebook_repo import get
-from db.bigquery import load
+from facebook.pipeline import (
+    ads_insights,
+    age_gender_insights,
+    device_insights,
+    platform_position_insights,
+    region_insights,
+    # video_insights,
+)
+
+
+pipelines = {
+    i.name: i
+    for i in [
+        ads_insights.pipeline,
+        age_gender_insights.pipeline,
+        device_insights.pipeline,
+        platform_position_insights.pipeline,
+        region_insights.pipeline,
+        # video_insights.pipeline,
+    ]
+}
 
 DATE_FORMAT = "%Y-%m-%d"
 

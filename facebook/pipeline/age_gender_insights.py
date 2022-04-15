@@ -1,7 +1,7 @@
 from facebook.pipeline.interface import AdsInsights
 
 
-age_gender_insights = AdsInsights(
+pipeline = AdsInsights(
     "AgeGenderInsights",
     "account",
     [
