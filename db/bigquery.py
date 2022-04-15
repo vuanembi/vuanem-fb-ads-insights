@@ -32,7 +32,7 @@ def load(
                 ),
             )
             .result()
-            .output_rows # type: ignore
+            .output_rows  # type: ignore
         )
         _update(table, id_key, ads_account_id)
         return output_rows
