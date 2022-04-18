@@ -1,21 +1,23 @@
 [tool.poetry]
-name = "vuanem_fb_ads_insights"
-version = "3.0"
+name = "vuanem-fb-ads-insights"
+version = "3.0.0"
 description = ""
 authors = ["HM <hieumdd@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "~3.9"
 requests = "^2.26.0"
-google-cloud-bigquery = "^2.27.1"
-google-cloud-tasks = "^2.5.2"
+google-cloud-bigquery = "2.34"
+google-cloud-tasks = "2.5.1"
+compose = "^1.2.8"
+google-cloud-secret-manager = "^2.10.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-pytest-timeout = "^1.4.2"
-black = "^21.9b0"
+black = "^22.3.0"
 mypy = "^0.910"
 types-requests = "^2.26.0"
+pytest-xdist = "^2.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -23,7 +25,11 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "-s --durations=0"
-timeout = 530
 testpaths = [
     "test",
 ]
+
+[tool.mypy]
+python_version = 3.9
+ignore_missing_imports = true
+namespace_packages = true
