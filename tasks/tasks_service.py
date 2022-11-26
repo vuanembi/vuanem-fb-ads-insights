@@ -10,6 +10,7 @@ ACCOUNTS = [
     "796051681037501",  # "DiamondVuaNemTiki
     "732801611166280",  # "Vuanem JSC _ 01
     "4769275693175777",  # "Vuanem JSC _ 02
+    "848406596106608", # "Vuanem JSC _ 00"
 ]
 
 
