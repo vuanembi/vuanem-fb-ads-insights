@@ -8,7 +8,7 @@ from compose import compose
 
 from secret_manager.cloud_secret_manager import get_secret
 
-API_VER = "v13.0"
+API_VER = "v15.0"
 BASE_URL = f"https://graph.facebook.com/{API_VER}/"
 
 
