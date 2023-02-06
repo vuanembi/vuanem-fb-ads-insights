@@ -5,8 +5,8 @@ from facebook.facebook_controller import facebook_controller
 from tasks.tasks_service import ACCOUNTS, tasks_service
 
 TIMEFRAME = [
-    ("auto", (None, None)),
-    # ("manual", ("2022-09-01", "2022-10-01")),
+    # ("auto", (None, None)),
+    ("manual", ("2023-02-01", "2023-03-01")),
 ]
 
 
