@@ -28,7 +28,7 @@ export const authenticate = async (code: string) => {
         expires_in: number;
     };
 
-    const clientSecret = await getSecret('FB_CLIENT_SECRET');
+    const clientSecret = await getSecret('facebook-client-secret');
 
     const accessToken = await axios
         .request<AccessTokenResponse>({
@@ -43,7 +43,7 @@ export const authenticate = async (code: string) => {
         })
         .then((response) => response.data);
 
-    await setSecret('FB_ACCESS_TOKEN', accessToken.access_token);
+    await setSecret('facebook-user-token', accessToken.access_token);
 
     return accessToken;
 };
