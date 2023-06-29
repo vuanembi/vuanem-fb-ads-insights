@@ -6,28 +6,12 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 import * as LoggingService from './logging.service';
-import { AUTH_ROUTE, AUTH_CALLBACK_ROUTE, authenticate, getAuthUrl } from './facebook/auth.service';
 import * as pipelines from './facebook/pipeline.const';
 import { runPipeline, createPipelineTasks } from './facebook/pipeline.service';
 
 const app = express();
 
 app.use(express.json());
-
-app.use(({ params, path, body }, _, next) => {
-    LoggingService.info({ path, params, body });
-    next();
-});
-
-app.get(AUTH_CALLBACK_ROUTE, (req, res) => {
-    authenticate(req.query.code as string)
-        .then((result) => res.status(200).json({ result }))
-        .catch((error) => res.status(500).json({ error }));
-});
-
-app.get(AUTH_ROUTE, (_, res) => {
-    res.redirect(getAuthUrl());
-});
 
 type CreatePipelineTasksBody = {
     start: string;
@@ -54,7 +38,7 @@ app.use('/task', (req, res) => {
                     res.status(200).json({ result });
                 })
                 .catch((error) => {
-                    console.error(JSON.stringify(error));
+                    LoggingService.error(error);
                     res.status(500).json({ error });
                 }),
         )
@@ -85,13 +69,13 @@ app.use('/', (req, res) => {
                     res.status(200).json({ result });
                 })
                 .catch((error) => {
-                    console.error(JSON.stringify(error));
+                    LoggingService.error(error);
                     res.status(500).json({ error });
                 });
         })
 
         .catch((error) => {
-            console.error(JSON.stringify(error));
+            LoggingService.error(error);
             res.status(500).json({ error });
         });
 });
