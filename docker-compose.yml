@@ -1,0 +1,16 @@
+services:
+  app:
+    image: vuanem-fb-ads-insights:${GH_REF}
+    build: .
+    container_name: vuanem-fb-ads-insights
+    volumes:
+      - ./${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/{GOOGLE_APPLICATION_CREDENTIALS}
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/{GOOGLE_APPLICATION_CREDENTIALS}
+      K_SERVICE: dev
+      K_CONFIGURATION: dev
+      K_REVISION: dev-00001
+
+      PUBLIC_URL: ${PUBLIC_URL}
+    ports:
+      - 8080:8080
