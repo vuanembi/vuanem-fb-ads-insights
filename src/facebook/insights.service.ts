@@ -73,26 +73,26 @@ export const get = async (options: ReportOptions, config: InsightsConfig): Promi
     const getInsights = (reportId: string): Readable => {
         const stream = new Readable({ objectMode: true, read: () => {} });
 
-        const _getInsights = async (after?: string) => {
-            try {
-                const data = await client
-                    .request<InsightsResponse>({
-                        method: 'GET',
-                        url: `/${reportId}/insights`,
-                        params: { after, limit: 500 },
-                    })
-                    .then((res) => res.data);
+        const _getInsights = (after?: string) => {
+            client
+                .request<InsightsResponse>({
+                    method: 'GET',
+                    url: `/${reportId}/insights`,
+                    params: { after, limit: 500 },
+                })
+                .then((response) => response.data)
+                .then((data) => {
+                    data.data.forEach((row) => stream.push(row));
+                    const x = data.data.filter((row) => row.ad_id === '23857841935690762');
 
-                data.data.forEach((row) => stream.push(row));
-
-                if (data.paging.next) {
-                    _getInsights(data.paging.cursors.after);
-                } else {
-                    stream.push(null);
-                }
-            } catch (error) {
-                stream.emit('error', error);
-            }
+                    data.paging.next ? _getInsights(data.paging.cursors.after) : stream.push(null);
+                })
+                .catch((error) => {
+                    if (axios.isAxiosError(error)) {
+                        console.log(error.response?.data);
+                    }
+                    stream.emit('error', error);
+                });
         };
 
         _getInsights();
