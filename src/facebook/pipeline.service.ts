@@ -21,10 +21,13 @@ export const runPipeline = async (reportOptions: ReportOptions, pipeline_: pipel
         new Transform({
             objectMode: true,
             transform: (row, _, callback) => {
-                callback(null, {
-                    ...Joi.attempt(row, pipeline_.validationSchema),
-                    _batched_at: dayjs().toISOString(),
-                });
+                const { value, error } = pipeline_.validationSchema.validate(row);
+                if (error) {
+                    callback(error);
+                    return;
+                }
+
+                callback(null, { value, _batched_at: dayjs().toISOString() });
             },
         }),
         ndjson.stringify(),
