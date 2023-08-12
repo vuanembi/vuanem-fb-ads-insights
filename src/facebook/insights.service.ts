@@ -83,8 +83,6 @@ export const get = async (options: ReportOptions, config: InsightsConfig): Promi
                 .then((response) => response.data)
                 .then((data) => {
                     data.data.forEach((row) => stream.push(row));
-                    const x = data.data.filter((row) => row.ad_id === '23857841935690762');
-
                     data.paging.next ? _getInsights(data.paging.cursors.after) : stream.push(null);
                 })
                 .catch((error) => {
